@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 # =========================
 # INPUTS (GitHub Action)
@@ -13,7 +13,7 @@ COMMIT_MESSAGE="${INPUT_COMMIT_MESSAGE}"
 TMP="/destrepo"
 
 # =========================
-# CONFIG (FROM WORKFLOW env)
+# CONFIG
 # =========================
 FILTER_REGEX="${FILTER_REGEX:-.*}"
 FILTER_FW_SPLIT="${FILTER_FW_SPLIT:-false}"
@@ -23,17 +23,19 @@ IGNORE_HIDDEN="${IGNORE_HIDDEN:-false}"
 # CLONE DEST REPO
 # =========================
 git clone "https://x:${TOKEN}@github.com/${DEST_REPO}.git" "$TMP"
+cd "$TMP"
+
+git config user.email "action@github.com"
+git config user.name "Hash Bot"
 
 # =========================
-# HASH + COPY LOGIC (TVŮJ KÓD)
+# HASH + COPY LOGIC
 # =========================
 for base_dir in "$SOURCE_ROOT"/*/; do
 
   base=$(basename "$base_dir")
 
-  # =========================
-  # SKIP hidden dirs
-  # =========================
+  # skip hidden dirs
   if [[ "$IGNORE_HIDDEN" == "true" ]]; then
     [[ "$base" == .* ]] && continue
   fi
@@ -77,36 +79,43 @@ for base_dir in "$SOURCE_ROOT"/*/; do
           continue
         fi
 
-		cp "$file" "$destfile"
-		qmldiff hash-diffs "$hashtab" "$destfile"
-		git add "$destfile"
+        cp "$file" "$destfile"
+        qmldiff hash-diffs "$hashtab" "$destfile"
 
-		# COMMIT_FILE="$(basename "$file")"
-		# git commit -m "Updated $COMMIT_FILE to fw $fw" || true
-		git commit -m "Updated to fw $fw" || true
-		echo "✅ QMD hashed + committed: $file"
+        git add "$destfile"
 
-	  else
-		cp "$file" "$destfile"
+        if git diff --cached -- "$destfile" --quiet; then
+          echo "ℹ️ No change: $file"
+        else
+          git commit -m "Updated $(basename "$file") (fw $fw)"
+          echo "✅ QMD committed: $file"
+        fi
 
-		git add "$destfile"
-		git commit -m "Updated to fw $fw" || true
+      else
 
-		echo "📄 Copied + committed: $file"
-	  fi
+        cp "$file" "$destfile"
 
+        git add "$destfile"
 
+        if git diff --cached -- "$destfile" --quiet; then
+          echo "ℹ️ No change: $file"
+        else
+          git commit -m "Updated $(basename "$file") (fw $fw_full)"
+          echo "📄 Copied + committed: $file"
+        fi
+
+      fi
 
     done
   done
 done
 
 # =========================
-# COMMIT + PUSH
+# PUSH
 # =========================
-cd "$TMP"
-
-git config user.email "action@github.com"
-git config user.name "Hash Bot"
+if git diff --cached --quiet; then
+  echo "No changes"
+  exit 0
+fi
 
 git push origin HEAD
