@@ -1,9 +1,6 @@
 #!/bin/bash
 set -eo pipefail
 
-echo "WORKSPACE CONTENT:"
-ls -la /github/workspace
-
 # =========================
 # INPUTS (GitHub Action)
 # =========================
@@ -21,10 +18,6 @@ TMP="/destrepo"
 FILTER_REGEX="${FILTER_REGEX:-.*}"
 FILTER_FW_SPLIT="${FILTER_FW_SPLIT:-false}"
 IGNORE_HIDDEN="${IGNORE_HIDDEN:-false}"
-
-echo "SOURCE_ROOT: $SOURCE_ROOT"
-echo "HASHTAB_ROOT: $HASHTAB_ROOT"
-echo "DEST_REPO: $DEST_REPO"
 
 # =========================
 # CLONE DEST REPO
@@ -131,7 +124,7 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       fi
 
       if [[ "$file" == *.qmd ]]; then
-        MSG="QMD ${ACTION} ${NAME} (fw ${fw})"
+        MSG="${ACTION} ${NAME} (fw ${fw})"
       else
         MSG="${ACTION} ${NAME}"
       fi
