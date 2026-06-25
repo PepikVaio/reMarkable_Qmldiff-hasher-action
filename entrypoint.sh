@@ -4,8 +4,6 @@ set -eo pipefail
 echo "WORKSPACE CONTENT:"
 ls -la /
 ls -la /github/workspace
-ls -la "$SOURCE_ROOT"
-
 
 # =========================
 # INPUTS (GitHub Action)
@@ -19,15 +17,26 @@ COMMIT_MESSAGE="${INPUT_COMMIT_MESSAGE}"
 TMP="/destrepo"
 
 # =========================
-# CONFIG
+# CONFIG (fallback + env support)
 # =========================
-FILTER_REGEX="${FILTER_REGEX:-.*}"
-FILTER_FW_SPLIT="${FILTER_FW_SPLIT:-false}"
-IGNORE_HIDDEN="${IGNORE_HIDDEN:-false}"
+FILTER_REGEX="${FILTER_REGEX:-^[0-9]+\.[0-9]}"
+FILTER_FW_SPLIT="${FILTER_FW_SPLIT:-true}"
+IGNORE_HIDDEN="${IGNORE_HIDDEN:-true}"
 
+echo "INPUT_SOURCE_ROOT: ${INPUT_SOURCE_ROOT}"
 echo "SOURCE_ROOT: $SOURCE_ROOT"
 echo "HASHTAB_ROOT: $HASHTAB_ROOT"
 echo "DEST_REPO: $DEST_REPO"
+
+# =========================
+# SAFETY CHECK (DŮLEŽITÉ)
+# =========================
+if [[ ! -d "$SOURCE_ROOT" ]]; then
+  echo "❌ SOURCE_ROOT does not exist: $SOURCE_ROOT"
+  echo "👉 Available folders:"
+  ls -ლა /github/workspace
+  exit 1
+fi
 
 # =========================
 # CLONE DEST REPO
@@ -45,6 +54,8 @@ CHANGED=0
 
 for base_dir in "$SOURCE_ROOT"/*/; do
 
+  [[ ! -d "$base_dir" ]] && continue
+
   base=$(basename "$base_dir")
 
   # skip hidden dirs
@@ -56,6 +67,8 @@ for base_dir in "$SOURCE_ROOT"/*/; do
   fw_dirs=("$base_dir"*/)
 
   for dir in "${fw_dirs[@]}"; do
+
+    [[ ! -d "$dir" ]] && continue
 
     fw_full=$(basename "$dir")
 
@@ -86,12 +99,8 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       fi
 
       hashtab="$HASHTAB_ROOT/$fw/hashtab"
-
       echo "HASHTAB: $hashtab"
 
-      # =========================
-      # COPY
-      # =========================
       cp "$file" "$destfile"
 
       # =========================
@@ -104,20 +113,20 @@ for base_dir in "$SOURCE_ROOT"/*/; do
           continue
         fi
 
-        BEFORE=$(md5sum "$destfile" || true)
+        BEFORE=$(md5sum "$destfile" | awk '{print $1}')
 
         qmldiff hash-diffs "$hashtab" "$destfile" || {
           echo "❌ qmldiff failed"
           continue
         }
 
-        AFTER=$(md5sum "$destfile" || true)
+        AFTER=$(md5sum "$destfile" | awk '{print $1}')
 
         if [[ "$BEFORE" != "$AFTER" ]]; then
-          echo "✅ FILE CHANGED BY QMLDIFF"
+          echo "✅ QMD changed"
           CHANGED=1
         else
-          echo "⚠️ No change from qmldiff"
+          echo "⚠️ No change"
         fi
 
       else
@@ -140,3 +149,5 @@ fi
 
 git commit -m "${COMMIT_MESSAGE:-Update hashed QMD files}"
 git push origin HEAD
+
+echo "✅ DONE"
