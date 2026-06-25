@@ -1,7 +1,6 @@
 #!/bin/bash
 set -eo pipefail
 
-
 echo "WORKSPACE CONTENT:"
 ls -la /
 ls -la /github/workspace
