@@ -14,7 +14,7 @@ echo "=============================="
 # INPUTS (GitHub Action)
 # =========================
 SOURCE_ROOT="/github/workspace/${INPUT_SOURCE_ROOT}"
-HASHTAB_ROOT="${INPUT_HASHTAB_ROOT}"
+HASHTAB_ROOT="/github/workspace/${INPUT_HASHTAB_ROOT}"
 DEST_REPO="${INPUT_DEST_REPO}"
 TOKEN="${INPUT_TOKEN}"
 COMMIT_MESSAGE="${INPUT_COMMIT_MESSAGE}"
