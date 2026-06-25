@@ -26,7 +26,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/rmitchellscott/qmldiff-hasher-action
+            ghcr.io/PepikVaio/reMarkable_Qmldiff-hasher-action
           tags: |
             # branch-based tags (e.g. 'main')
             type=ref,event=branch
