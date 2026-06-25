@@ -19,4 +19,4 @@ inputs:
     default: 'Update hashed QMD files'
 runs:
   using: 'docker'
-  image: docker://ghcr.io/pepikvaio/reMarkable_qmldiff-hasher-action:latest
+  image: docker://ghcr.io/pepikvaio/reMarkable_Qmldiff-hasher-action:latest
