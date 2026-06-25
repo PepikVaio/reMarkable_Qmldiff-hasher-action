@@ -1,19 +1,22 @@
 name: 'QMLDiff hasher'
-description: 'Hashes the files specified in an input, and pushes the files into a public repository'
+description: 'Hashes QMD files, copies structure and pushes to a public repository'
 inputs:
-  qmd_hash_rules:
-    description: 'The QMD hashing rules. Format is: hashtab1,root-directory-ht1,a.qmd,b.qmd,c.qmd;hashtab2,root-ht2,d.qmd,e.qmd...'
+  source_root:
+    description: 'Root folder with source files'
     required: true
-  dest_repo_name:
-    description: 'The name of the destination, public repo (f.ex. user/repository)'
+  hashtab_root:
+    description: 'Root folder containing hashtab files'
     required: true
-  repo_access_token:
-    description: 'The token to use when pushing to the public repo'
+  dest_repo:
+    description: 'Destination public repository (user/repo)'
+    required: true
+  token:
+    description: 'GitHub token for pushing to destination repo'
     required: true
   commit_message:
-    description: 'Custom commit message for the destination repo (defaults to timestamp-based message)'
+    description: 'Custom commit message (optional)'
     required: false
+    default: 'Update hashed QMD files'
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/rmitchellscott/qmldiff-hasher-action:v1'
-
+  image: 'docker://ghcr.io/pepikvaio/qmldiff-hasher:v1'

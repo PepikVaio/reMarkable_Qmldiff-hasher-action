@@ -13,5 +13,3 @@ WORKDIR /workdir
 COPY --from=builder /workdir/target/release/qmldiff /usr/bin/
 COPY entrypoint.sh /workdir/
 CMD ["/workdir/entrypoint.sh"]
-
-
