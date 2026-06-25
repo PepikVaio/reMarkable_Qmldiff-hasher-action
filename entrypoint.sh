@@ -1,9 +1,14 @@
 #!/bin/bash
 set -eo pipefail
 
-echo "WORKSPACE CONTENT:"
-ls -la /
+echo "=============================="
+echo "WORKSPACE DEBUG"
+echo "=============================="
 ls -la /github/workspace
+
+echo "=============================="
+echo "INPUT DEBUG"
+echo "=============================="
 
 # =========================
 # INPUTS (GitHub Action)
@@ -17,26 +22,17 @@ COMMIT_MESSAGE="${INPUT_COMMIT_MESSAGE}"
 TMP="/destrepo"
 
 # =========================
-# CONFIG (fallback + env support)
+# CONFIG
 # =========================
-FILTER_REGEX="${FILTER_REGEX:-^[0-9]+\.[0-9]}"
-FILTER_FW_SPLIT="${FILTER_FW_SPLIT:-true}"
-IGNORE_HIDDEN="${IGNORE_HIDDEN:-true}"
+FILTER_REGEX="${FILTER_REGEX:-.*}"
+FILTER_FW_SPLIT="${FILTER_FW_SPLIT:-false}"
+IGNORE_HIDDEN="${IGNORE_HIDDEN:-false}"
 
-echo "INPUT_SOURCE_ROOT: ${INPUT_SOURCE_ROOT}"
-echo "SOURCE_ROOT: $SOURCE_ROOT"
-echo "HASHTAB_ROOT: $HASHTAB_ROOT"
-echo "DEST_REPO: $DEST_REPO"
+echo "SOURCE_ROOT   = $SOURCE_ROOT"
+echo "HASHTAB_ROOT  = $HASHTAB_ROOT"
+echo "DEST_REPO     = $DEST_REPO"
 
-# =========================
-# SAFETY CHECK (DŮLEŽITÉ)
-# =========================
-if [[ ! -d "$SOURCE_ROOT" ]]; then
-  echo "❌ SOURCE_ROOT does not exist: $SOURCE_ROOT"
-  echo "👉 Available folders:"
-  ls -ლა /github/workspace
-  exit 1
-fi
+echo "=============================="
 
 # =========================
 # CLONE DEST REPO
@@ -50,11 +46,9 @@ git config user.name "Hash Bot"
 # =========================
 # PROCESSING
 # =========================
-CHANGED=0
-
 for base_dir in "$SOURCE_ROOT"/*/; do
 
-  [[ ! -d "$base_dir" ]] && continue
+  [[ -d "$base_dir" ]] || continue
 
   base=$(basename "$base_dir")
 
@@ -68,39 +62,38 @@ for base_dir in "$SOURCE_ROOT"/*/; do
 
   for dir in "${fw_dirs[@]}"; do
 
-    [[ ! -d "$dir" ]] && continue
+    [[ -d "$dir" ]] || continue
 
     fw_full=$(basename "$dir")
 
+    # =========================
+    # FW NORMALIZATION (FIX 🔥)
+    # =========================
+    fw=$(echo "$fw_full" | awk -F. '{print $1"."$2}')
+
     [[ "$fw_full" =~ $FILTER_REGEX ]] || continue
+
+    echo "--------------------------------"
+    echo "FW FULL: $fw_full"
+    echo "FW USED: $fw"
 
     find "$dir" -type f \
       ! -path "*/.*/*" \
       ! -path "*/.*" | while IFS= read -r file; do
 
-      [[ ! -f "$file" ]] && continue
+      [[ -f "$file" ]] || continue
 
+      echo "FILE: $file"
+
+      # relativní cesta v cíli
       rel_path="${file#$SOURCE_ROOT/}"
       destfile="$TMP/$rel_path"
 
       mkdir -p "$(dirname "$destfile")"
 
-      echo "--------------------------------"
-      echo "FILE: $file"
-      echo "FW: $fw_full"
-
       # =========================
-      # FW logic
+      # COPY
       # =========================
-      if [[ "$FILTER_FW_SPLIT" == "true" ]]; then
-        fw=$(echo "$fw_full" | cut -d'.' -f1-2)
-      else
-        fw="$fw_full"
-      fi
-
-      hashtab="$HASHTAB_ROOT/$fw/hashtab"
-      echo "HASHTAB: $hashtab"
-
       cp "$file" "$destfile"
 
       # =========================
@@ -108,23 +101,26 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       # =========================
       if [[ "$file" == *.qmd ]]; then
 
+        hashtab="$HASHTAB_ROOT/$fw/hashtab"
+
+        echo "HASHTAB: $hashtab"
+
         if [[ ! -f "$hashtab" ]]; then
           echo "❌ Missing hashtab -> skipping"
           continue
         fi
 
-        BEFORE=$(md5sum "$destfile" | awk '{print $1}')
+        BEFORE=$(md5sum "$destfile" || true)
 
         qmldiff hash-diffs "$hashtab" "$destfile" || {
           echo "❌ qmldiff failed"
           continue
         }
 
-        AFTER=$(md5sum "$destfile" | awk '{print $1}')
+        AFTER=$(md5sum "$destfile" || true)
 
         if [[ "$BEFORE" != "$AFTER" ]]; then
-          echo "✅ QMD changed"
-          CHANGED=1
+          echo "✅ QMD modified"
         else
           echo "⚠️ No change"
         fi
@@ -140,7 +136,7 @@ for base_dir in "$SOURCE_ROOT"/*/; do
 done
 
 # =========================
-# COMMIT
+# COMMIT + PUSH
 # =========================
 if git diff --cached --quiet; then
   echo "No changes in repo"
@@ -150,4 +146,5 @@ fi
 git commit -m "${COMMIT_MESSAGE:-Update hashed QMD files}"
 git push origin HEAD
 
-echo "✅ DONE"
+echo "=============================="
+echo "DONE"
