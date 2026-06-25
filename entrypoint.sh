@@ -1,10 +1,17 @@
 #!/bin/bash
 set -eo pipefail
 
+
+echo "WORKSPACE CONTENT:"
+ls -la /
+ls -la /github/workspace
+ls -la "$SOURCE_ROOT"
+
+
 # =========================
 # INPUTS (GitHub Action)
 # =========================
-SOURCE_ROOT="${INPUT_SOURCE_ROOT}"
+SOURCE_ROOT="/github/workspace/${INPUT_SOURCE_ROOT}"
 HASHTAB_ROOT="${INPUT_HASHTAB_ROOT}"
 DEST_REPO="${INPUT_DEST_REPO}"
 TOKEN="${INPUT_TOKEN}"
