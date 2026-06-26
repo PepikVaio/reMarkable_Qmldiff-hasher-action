@@ -128,9 +128,10 @@ jobs:
 
 <br>
 
-### Používání
+## Používání
 > Nahrajte změny v souboru `qmd`.
-- Commitněte a odešlete libovolnou změnu do privátního repozitáře.
+> <br>
+> Commitněte a odešlete libovolnou změnu do privátního repozitáře.
 
 <br>
 
