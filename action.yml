@@ -7,16 +7,15 @@ inputs:
   hashtab_root:
     description: 'Root folder containing hashtab files'
     required: true
-  dest_repo:
-    description: 'Destination public repository (user/repo)'
+  dest_repo_name:
+    description: 'The name of the destination, public repo (f.ex. user/repository)'
     required: true
-  token:
-    description: 'GitHub token for pushing to destination repo'
+  repo_access_token:
+    description: 'The token to use when pushing to the public repo'
     required: true
   commit_message:
-    description: 'Custom commit message (optional)'
+    description: 'Custom commit message for the destination repo (defaults to Updated/Created {name} for fw {fw})'
     required: false
-    default: 'Update hashed QMD files'
 runs:
   using: 'docker'
   image: 'docker://ghcr.io/pepikvaio/remarkable_qmldiff-hasher-action:main'
