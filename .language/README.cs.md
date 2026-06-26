@@ -117,11 +117,16 @@ jobs:
 ```
 
 > [!TIP]
-> `PATH_FOLDER`	složka obsahující `qmd` soubory. Pokud ji necháte prázdnou (""), bude se zpracovávat celý repozitář.
+> `PATH_FOLDER` složka obsahující `qmd` soubory. Pokud ji necháte prázdnou (""), bude se zpracovávat celý repozitář.
+> <br>
 > `PATH_HASHTABS` cesta ke složce s hashtaby.
+> <br>
 > `NAME_PUBLIC_REPO` název cílového veřejného repozitáře ve tvaru `uživatel/repozitář`.
-> `NAME_TOKEN`	název `GitHub Secret Name` obsahující `Personal Access Token`.
+> <br>
+> `NAME_TOKEN` název `GitHub Secret Name` obsahující `Personal Access Token`.
+> <br>
 > `COMMIT_MESSAGE` volitelná vlastní zpráva. Pokud zůstane prázdná, vytvoří se automaticky.
+> <br>
 > `IGNORE_HIDDEN` volba zda se mají zpracovat i skryté soubory.
 
 <br>
