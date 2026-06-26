@@ -8,7 +8,6 @@ on:
       - 'v*.*.*'
       - 'v*.*'
       - 'v*.*.*-*'
-  workflow_dispatch:
 
 jobs:
   build:
