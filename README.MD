@@ -135,7 +135,7 @@ jobs:
 
 <br>
 
-GitHub Action se automaticky spustí a provede:
+GitHub akce se automaticky spustí a provede:
 1. stažení veřejného repozitáře,
 2. zpracování všech .qmd souborů,
 3. aplikaci QMLDiff hashování,
