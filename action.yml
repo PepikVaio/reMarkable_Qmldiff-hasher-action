@@ -3,7 +3,8 @@ description: 'Hashes QMD files, copies structure and pushes to a public reposito
 inputs:
   source_root:
     description: 'Root folder with source files'
-    required: true
+    required: false
+    default: ''
   hashtab_root:
     description: 'Root folder containing hashtab files'
     required: true
