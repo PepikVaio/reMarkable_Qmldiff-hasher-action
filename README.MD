@@ -51,16 +51,16 @@
 
 <br>
 
+### Uložte token do privátního repozitáře:
 > [!NOTE]
-> Uložte token do privátního repozitáře:
 > 1. Otevřete svůj privátní repozitář a přejděte na: `Settings / Secrets and variables / Actions / New repository secret`
 > 2. Zapište `Name`: `PUBLIC_REPO_TOKEN` a vložte `Secret` (váš vygenerovaný GitHub token).
 > 3. Klikněte na `Add secret`.
 
 <br>
 
+### Přidejte workflow:
 > [!NOTE]
-> Přidejte workflow:
 > 1. V privátním repozitáři vytvořte soubor: `.github/workflows/hash-files.yml`
 > 2. Do něj vložte ukázkový workflow (viz níže).
 > 3. Upravte pouze následující proměnné:
@@ -118,13 +118,12 @@ jobs:
 ```
 
 > [!TIP]
-> Význam proměnných:
-> - `PATH_FOLDER`	složka obsahující `qmd` soubory. Pokud ji necháte prázdnou (""), bude se zpracovávat celý repozitář.
-> - `PATH_HASHTABS` cesta ke složce s hashtaby.
-> - `NAME_PUBLIC_REPO` název cílového veřejného repozitáře ve tvaru uživatel/repozitář.
-> - `NAME_TOKEN`	název `GitHub Secret Name` obsahující `Personal Access Token`.
-> - `COMMIT_MESSAGE` volitelná vlastní zpráva. Pokud zůstane prázdná, vytvoří se automaticky.
-> - `IGNORE_HIDDEN` volba zda se mají zpracovat i skryté soubory.
+> `PATH_FOLDER`	složka obsahující `qmd` soubory. Pokud ji necháte prázdnou (""), bude se zpracovávat celý repozitář.
+> `PATH_HASHTABS` cesta ke složce s hashtaby.
+> `NAME_PUBLIC_REPO` název cílového veřejného repozitáře ve tvaru uživatel/repozitář.
+> `NAME_TOKEN`	název `GitHub Secret Name` obsahující `Personal Access Token`.
+> `COMMIT_MESSAGE` volitelná vlastní zpráva. Pokud zůstane prázdná, vytvoří se automaticky.
+> `IGNORE_HIDDEN` volba zda se mají zpracovat i skryté soubory.
 
 <br>
 
