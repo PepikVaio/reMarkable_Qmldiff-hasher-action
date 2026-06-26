@@ -1,6 +1,5 @@
 [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/PepikVaio/reMarkable_Qmldiff-hasher-action)
-[![cs](https://img.shields.io/badge/lang-cs-springgreen.svg)](https://github.com/PepikVaio/reMarkable_Qmldiff-hasher-action/blob/main/.language_cs/README.cs.md)
-
+[![cs](https://img.shields.io/badge/lang-cs-springgreen.svg)](https://github.com/PepikVaio/reMarkable_Qmldiff-hasher-action/blob/main/.language/README.cs.MD)
 
 # GitHub Action!
 > This is a simple GitHub Action for hashing QMLDiff files.
