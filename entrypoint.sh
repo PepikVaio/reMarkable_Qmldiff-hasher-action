@@ -129,7 +129,7 @@ for base_dir in "$SOURCE_ROOT"/*/; do
         if [[ "$FILE_EXISTS" == "true" ]]; then
           MSG="Updated ${NAME} (fw ${fw})"
         else
-          MSG="Created ${NAME} (fw ${fw})"
+          MSG="Created ${NAME} (for fw ${fw})"
         fi
       fi
 
