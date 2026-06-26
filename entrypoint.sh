@@ -21,8 +21,8 @@ TMP="/destrepo"
 # ============================
 # CONFIG
 # ============================
-FILTER_REGEX="${FILTER_REGEX:-.*}"
-FILTER_FW_SPLIT="${FILTER_FW_SPLIT:-false}"
+FILTER_REGEX='^[0-9]+\.[0-9]'
+NORMALIZE_FW="${NORMALIZE_FW:-false}"
 IGNORE_HIDDEN="${IGNORE_HIDDEN:-false}"
 
 # ============================
@@ -71,7 +71,7 @@ for base_dir in "$SOURCE_ROOT"/*/; do
 
       # FW handling
       fw="$fw_full"
-      if [[ "$FILTER_FW_SPLIT" == "true" ]]; then
+      if [[ "$NORMALIZE_FW" == "true" ]]; then
         fw=$(echo "$fw_full" | cut -d'.' -f1-2)
       fi
 
