@@ -7,7 +7,7 @@ set -eo pipefail
 SOURCE_ROOT="/github/workspace/${INPUT_SOURCE_ROOT}"
 HASHTAB_ROOT="/github/workspace/${INPUT_HASHTAB_ROOT}"
 DEST_REPO_NAME="${INPUT_DEST_REPO_NAME}"
-REPO_ACCESS_TOKEN="${INPUT_REPO_ACCESS_TOKEN}"
+REPO_ACCESS_TOKEN="${INPUT_REPO_ACCES_TOKEN}"
 COMMIT_MESSAGE="${INPUT_COMMIT_MESSAGE}"
 
 TMP="/destrepo"
@@ -27,6 +27,10 @@ cd "$TMP"
 
 git config user.email "action@github.com"
 git config user.name "Hash Bot"
+
+echo "SOURCE_ROOT: $SOURCE_ROOT"
+echo "HASHTAB_ROOT: $HASHTAB_ROOT"
+echo "DEST: $DEST_REPO_NAME"
 
 # ============================
 # PROCESSING
@@ -55,11 +59,15 @@ for base_dir in "$SOURCE_ROOT"/*/; do
 
       [[ ! -f "$file" ]] && continue
 
+      # ============================
+      # PATH FIX (důležité)
+      # ============================
       rel_path="${file#$SOURCE_ROOT/}"
       destfile="$TMP/$rel_path"
 
       mkdir -p "$(dirname "$destfile")"
 
+      # FW handling
       fw="$fw_full"
       if [[ "$FILTER_FW_SPLIT" == "true" ]]; then
         fw=$(echo "$fw_full" | cut -d'.' -f1-2)
@@ -73,33 +81,34 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       echo "DEST: $destfile"
       echo "HASHTAB: $hashtab"
 
-      FILE_EXISTS="false"
-      [[ -f "$destfile" ]] && FILE_EXISTS="true"
-
       # ============================
       # COPY FIRST
       # ============================
       cp "$file" "$destfile"
 
+      # ============================
+      # QMD HASH
+      # ============================
       if [[ "$file" == *.qmd ]]; then
 
-          if [[ ! -f "$hashtab" ]]; then
-              echo "Missing hashtab -> skipping"
-              continue
-          fi
+        if [[ ! -f "$hashtab" ]]; then
+          echo "⚠️ Missing hashtab -> skipping"
+          continue
+        fi
 
-          qmldiff hash-diffs "$hashtab" "$destfile" || {
-              echo "Qmldiff failed"
-              continue
-          }
+        qmldiff hash-diffs "$hashtab" "$destfile" || {
+          echo "❌ qmldiff failed"
+          continue
+        }
 
       fi
 
+      # ============================
+      # STAGE ONLY THIS FILE
+      # ============================
       git add "$destfile"
 
-      # ============================
-      # DETECT CHANGE
-      # ============================
+      # IMPORTANT: staged diff
       if git diff --cached --quiet -- "$destfile"; then
         echo "No change: $file"
         continue
@@ -109,30 +118,19 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       # MESSAGE BUILD
       # ============================
       if [[ -n "$COMMIT_MESSAGE" ]]; then
-
         MSG="$COMMIT_MESSAGE"
-
       else
-
         NAME=$(basename "$file")
 
-        if [[ "$FILE_EXISTS" == "true" ]]; then
-          ACTION="Updated"
-        else
-          ACTION="Created"
-        fi
-
         if [[ "$file" == *.qmd ]]; then
-          MSG="${ACTION} ${NAME} (for fw ${fw})"
+          MSG="Updated ${NAME} (fw ${fw})"
         else
-          MSG="${ACTION} ${NAME}"
+          MSG="Updated ${NAME}"
         fi
-
       fi
 
       git commit -m "$MSG"
-
-      echo "$MSG"
+      echo "✅ $MSG"
 
     done
   done
@@ -142,4 +140,5 @@ done
 # PUSH
 # ============================
 git push origin HEAD
+
 echo "DONE"
