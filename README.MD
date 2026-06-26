@@ -20,7 +20,30 @@
 <br>
 
 ## Instalace
-Vytvořte soubor `.github/workflow/publish.yml` ve vašem soukromém repozitáři, kde uchováváte nehašované soubory QMD s následujícím obsahem:
+
+> [!IMPORTANT]
+> Před použitím této gitHub akce budete potřebovat:
+> * privátní repozitář, který obsahuje vaše původní .qmd soubory a hashtaby,
+> * veřejný repozitář, do kterého se budou publikovat zpracované soubory,
+> * oprávnění zapisovat do veřejného repozitáře.
+
+<br>
+
+> [!NOTE]
+> Vytvořte `Personal Access Token`:
+> 1. Přihlaste se na GitHub.
+> 2. Klikněte na svůj profilový obrázek.
+> 3. Otevřete `Settings`.
+> 4. V levém menu zvolte `Developer settings`.
+> 5. Otevřete `Personal access tokens`.
+> 6. Vyberte `Fine-grained tokens`.
+> 7. Klikněte na `Generate new token`.
+> 8. Nastavte: `Repository access`.
+> 9. Vyberte: `Only select repositories`.
+> 10. Zvolte: Svůj veřejný repozitář.
+> 11. `Repository permissions` Nastavte oprávnění: * Contents → Read and write.
+> 12. Klikněte na `Generate token` a zkopírujte si vygenerovaný token.
+
 
 ```
 name: 'hash-files'
@@ -67,27 +90,10 @@ jobs:
           repo_access_token: ${{ secrets[env.NAME_TOKEN] }}
           commit_message: ${{ env.COMMIT_MESSAGE }}
 ```
-> [!IMPORTANT]
-> Před použitím této gitHub akce budete potřebovat:
-> * privátní repozitář, který obsahuje vaše původní .qmd soubory a hashtaby,
-> * veřejný repozitář, do kterého se budou publikovat zpracované soubory,
-> * oprávnění zapisovat do veřejného repozitáře.
 
 
-> [!NOTE]
-> Vytvořte Personal Access Token:
-> 1. Přihlaste se na GitHub.
-> 2. Klikněte na svůj profilový obrázek.
-> 3. Otevřete `Settings`.
-> 4. V levém menu zvolte `Developer settings`.
-> 5. Otevřete `Personal access tokens`.
-> 6. Vyberte `Fine-grained tokens`.
-> 7. Klikněte na `Generate new token`.
-> 8. Nastavte: `Repository access`.
-> 9. Vyberte: `Only select repositories`.
-> 10. Zvolte: Svůj veřejný repozitář.
-> 11. `Repository permissions` Nastavte oprávnění: * Contents → Read and write.
-> 12. Klikněte na `Generate token` a zkopírujte si vygenerovaný token.
+
+
 
 
 [!IMPORTANT]
