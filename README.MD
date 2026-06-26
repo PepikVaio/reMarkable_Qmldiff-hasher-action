@@ -130,7 +130,6 @@ jobs:
 
 ### Používání
 > Nahrajte změny v souboru `qmd`.
-<br>
 > Commitněte a odešlete libovolnou změnu do privátního repozitáře.
 
 <br>
