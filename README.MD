@@ -2,68 +2,68 @@
 [![cs](https://img.shields.io/badge/lang-cs-springgreen.svg)](https://github.com/PepikVaio/reMarkable_Qmldiff-hasher-action/blob/main/.language_cs/README.cs.md)
 
 
-# Github akce!
-> Toto je jednoduchá akce GitHubu pro hashování souborů QMLDiff.
+# GitHub Action!
+> This is a simple GitHub Action for hashing QMLDiff files.
 > <br>
-> Tato Github akce automaticky zpracovává `.qmd` soubory, aplikuje na ně QML diff hashing pomocí hashtabů a následně je publikuje do veřejného GitHub repozitáře.
+> This GitHub Action automatically processes `.qmd` files, applies QML diff hashing using hashtabs, and then publishes them to a public GitHub repository.
 > <br>
-> Slouží jako most mezi privátním vývojem a veřejnou distribucí dat.
+> It serves as a bridge between private development and public data distribution.
 
-- Po každém pushi do privátního repozitáře:
-  - projde všechny `.qmd` soubory
-  - najde odpovídající firmware složky
-  - aplikuje hashování přes hashtab
-  - zkopíruje výsledek do cílového repozitáře
-  - vytvoří commit s informací o změně
-  - rozliší:
-    - vytvořeno (nový soubor)
-    - aktualizováno (změněný soubor)
+- On every push to the private repository:
+  - iterates through all `.qmd` files
+  - finds the corresponding firmware folders
+  - applies hashing via hashtab
+  - copies the result to the target repository
+  - creates a commit with information about the change
+  - distinguishes between:
+    - created (new file)
+    - updated (modified file)
 
 <br>
 
-## Instalace
+## Installation
 
 > [!IMPORTANT]
-> Před použitím této Github akce budete potřebovat:
-> * privátní repozitář, který obsahuje vaše původní `.qmd` soubory a hashtaby
-> * veřejný repozitář, do kterého se budou publikovat zpracované soubory
-> * oprávnění zapisovat do veřejného repozitáře
+> Before using this GitHub Action you will need:
+> * a private repository containing your original `.qmd` files and hashtabs
+> * a public repository where the processed files will be published
+> * write permission to the public repository
 
 <br>
 
-### Vytvořte `Personal Access Token`:
+### Create a `Personal Access Token`:
 > [!NOTE]
-> 1. Přihlaste se na `GitHub`.
-> 2. Klikněte na svůj profilový obrázek.
-> 3. Otevřete `Settings`.
-> 4. V levém menu zvolte `Developer settings`.
-> 5. Otevřete `Personal access tokens`.
-> 6. Vyberte `Fine-grained tokens`.
-> 7. Klikněte na `Generate new token`.
-> 8. Zapište název tokenu `qmldiff-hasher-action`.
-> 9. Nastavte `Repository access` - Vyberte `Only select repositories` a zvolte svůj veřejný repozitář.
-> 10. Nastavte `Repository permissions` - Vyberte `+ Add permissions` a nastavte oprávnění `Contents → Read and write`.
-> 11. Klikněte na `Generate token` a zkopírujte si vygenerovaný token.
+> 1. Log in to `GitHub`.
+> 2. Click on your profile picture.
+> 3. Open `Settings`.
+> 4. In the left menu select `Developer settings`.
+> 5. Open `Personal access tokens`.
+> 6. Select `Fine-grained tokens`.
+> 7. Click `Generate new token`.
+> 8. Enter the token name `qmldiff-hasher-action`.
+> 9. Set `Repository access` — select `Only select repositories` and choose your public repository.
+> 10. Set `Permissions` — select `+ Add permissions` and set `Contents → Read and write`.
+> 11. Click `Generate token` and copy the generated token.
 
 > [!CAUTION]
-> GitHub zobrazí token pouze jednou.
-> Po zavření stránky jej již nebude možné znovu zobrazit.
+> GitHub will display the token only once.
+> Once you close the page, it will no longer be possible to view it again.
 
 <br>
 
-### Uložte token do privátního repozitáře:
+### Save the token to the private repository:
 > [!NOTE]
-> 1. Otevřete svůj privátní repozitář a přejděte na: `Settings / Secrets and variables / Actions / New repository secret`
-> 2. Zapište `Name`: `PUBLIC_REPO_TOKEN` a vložte `Secret` (váš vygenerovaný GitHub token).
-> 3. Klikněte na `Add secret`.
+> 1. Open your private repository and navigate to: `Settings / Secrets and variables / Actions / New repository secret`
+> 2. Enter `Name`: `PUBLIC_REPO_TOKEN` and paste the `Secret` (your generated GitHub token).
+> 3. Click `Add secret`.
 
 <br>
 
-### Přidejte workflow:
+### Add the workflow:
 > [!NOTE]
-> 1. V privátním repozitáři vytvořte soubor: `.github/workflows/hash-files.yml`
-> 2. Do něj vložte ukázkový workflow (viz níže).
-> 3. Upravte pouze následující proměnné:
+> 1. In the private repository create the file: `.github/workflows/hash-files.yml`
+> 2. Paste the example workflow into it (see below).
+> 3. Edit only the following variables:
 >   - PATH_FOLDER:
 >   - PATH_HASHTABS:
 >   - NAME_PUBLIC_REPO:
@@ -71,7 +71,7 @@
 >   - COMMIT_MESSAGE:
 >   - IGNORE_HIDDEN:
 
-```
+```yaml
 name: 'hash-files'
 on:
   push:
@@ -118,39 +118,39 @@ jobs:
 ```
 
 > [!TIP]
-> `PATH_FOLDER`	složka obsahující `qmd` soubory. Pokud ji necháte prázdnou (""), bude se zpracovávat celý repozitář.
-> `PATH_HASHTABS` cesta ke složce s hashtaby.
-> `NAME_PUBLIC_REPO` název cílového veřejného repozitáře ve tvaru uživatel/repozitář.
-> `NAME_TOKEN`	název `GitHub Secret Name` obsahující `Personal Access Token`.
-> `COMMIT_MESSAGE` volitelná vlastní zpráva. Pokud zůstane prázdná, vytvoří se automaticky.
-> `IGNORE_HIDDEN` volba zda se mají zpracovat i skryté soubory.
+> `PATH_FOLDER` — folder containing `qmd` files. If left empty (""), the entire repository will be processed.
+> `PATH_HASHTABS` — path to the folder with hashtabs.
+> `NAME_PUBLIC_REPO` — name of the target public repository in the format `user/repository`.
+> `NAME_TOKEN` — name of the `GitHub Secret` containing the `Personal Access Token`.
+> `COMMIT_MESSAGE` — optional custom message. If left empty, one will be generated automatically.
+> `IGNORE_HIDDEN` — whether hidden files should also be processed.
 
 <br>
 
-## Používání
-> Nahrajte změny v souboru `qmd`.
+## Usage
+> Upload changes to the `qmd` file.
 > <br>
-> Commitněte a odešlete libovolnou změnu do privátního repozitáře.
+> Commit and push any change to the private repository.
 
 <br>
 
-GitHub akce se automaticky spustí a provede:
-1. stažení veřejného repozitáře,
-2. zpracování všech .qmd souborů,
-3. aplikaci QMLDiff hashování,
-4. vytvoření commitů pro nové nebo změněné soubory,
-5. odeslání změn do veřejného repozitáře.
+The GitHub Action will start automatically and will:
+1. check out the public repository,
+2. process all `.qmd` files,
+3. apply QMLDiff hashing,
+4. create commits for new or changed files,
+5. push the changes to the public repository.
 
 <br>
 
-## Pomoc
-Vytvořte problémy, pokud najdete problém.
+## Help
+Create issues if you find a problem.
 
 > [!NOTE]
 > ### Authors
-> - **Jméno:** Wajsar Josef  
+> - **Name:** Wajsar Josef
 > - **Email:** [Wajsar.Josef@hotmail.com](mailto:Wajsar.Josef@hotmail.com)
-> ### Poděkování
-> Inspirace, úryvky kódu atd...
+> ### Acknowledgements
+> Inspiration, code snippets, etc...
 > - [asivery](https://github.com/asivery/qmldiff-hasher-action)
 > - [rmitchellscott](https://github.com/rmitchellscott/qmldiff-hasher-action)
