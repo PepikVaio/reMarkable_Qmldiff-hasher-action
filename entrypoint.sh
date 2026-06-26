@@ -78,7 +78,15 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       hashtab="$HASHTAB_ROOT/$fw/hashtab"
 
       # ============================
-      # COPY FIRST
+      # CHECK BEFORE COPY (IMPORTANT)
+      # ============================
+      FILE_EXISTS="false"
+      if [[ -f "$destfile" ]]; then
+        FILE_EXISTS="true"
+      fi
+
+      # ============================
+      # COPY AFTER CHECK
       # ============================
       cp "$file" "$destfile"
 
