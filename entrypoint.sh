@@ -1,36 +1,36 @@
 #!/bin/bash
 set -eo pipefail
 
-# =========================
+# ============================
 # INPUTS (GitHub Action)
-# =========================
+# ============================
 SOURCE_ROOT="/github/workspace/${INPUT_SOURCE_ROOT}"
 HASHTAB_ROOT="/github/workspace/${INPUT_HASHTAB_ROOT}"
-DEST_REPO="${INPUT_DEST_REPO}"
-TOKEN="${INPUT_TOKEN}"
+DEST_REPO_NAME="${INPUT_DEST_REPO_NAME}"
+REPO_ACCESS_TOKEN="${INPUT_REPO_ACCES_TOKEN}"
 COMMIT_MESSAGE="${INPUT_COMMIT_MESSAGE}"
 
 TMP="/destrepo"
 
-# =========================
+# ============================
 # CONFIG
-# =========================
+# ============================
 FILTER_REGEX="${FILTER_REGEX:-.*}"
 FILTER_FW_SPLIT="${FILTER_FW_SPLIT:-false}"
 IGNORE_HIDDEN="${IGNORE_HIDDEN:-false}"
 
-# =========================
+# ============================
 # CLONE DEST REPO
-# =========================
-git clone "https://x:${TOKEN}@github.com/${DEST_REPO}.git" "$TMP"
+# ============================
+git clone "https://x:${REPO_ACCESS_TOKEN}@github.com/${DEST_REPO_NAME}.git" "$TMP"
 cd "$TMP"
 
 git config user.email "action@github.com"
 git config user.name "Hash Bot"
 
-# =========================
+# ============================
 # PROCESSING
-# =========================
+# ============================
 shopt -s nullglob
 
 for base_dir in "$SOURCE_ROOT"/*/; do
@@ -76,69 +76,70 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       FILE_EXISTS="false"
       [[ -f "$destfile" ]] && FILE_EXISTS="true"
 
-      # =========================
+      # ============================
       # COPY FIRST
-      # =========================
+      # ============================
       cp "$file" "$destfile"
-
-      BEFORE_HASH=""
-      AFTER_HASH=""
 
       if [[ "$file" == *.qmd ]]; then
 
-        if [[ ! -f "$hashtab" ]]; then
-          echo "❌ Missing hashtab -> skipping"
-          continue
-        fi
+          if [[ ! -f "$hashtab" ]]; then
+              echo "Missing hashtab -> skipping"
+              continue
+          fi
 
-        BEFORE_HASH=$(md5sum "$destfile" || true)
-
-        qmldiff hash-diffs "$hashtab" "$destfile" || {
-          echo "❌ qmldiff failed"
-          continue
-        }
-
-        AFTER_HASH=$(md5sum "$destfile" || true)
+          qmldiff hash-diffs "$hashtab" "$destfile" || {
+              echo "Qmldiff failed"
+              continue
+          }
 
       fi
 
       git add "$destfile"
 
-      # =========================
+      # ============================
       # DETECT CHANGE
-      # =========================
+      # ============================
       if git diff --cached --quiet -- "$destfile"; then
-        echo "ℹ️ no change: $file"
+        echo "No change: $file"
         continue
       fi
 
-      # =========================
+      # ============================
       # MESSAGE BUILD
-      # =========================
-      NAME=$(basename "$file")
+      # ============================
+      if [[ -n "$COMMIT_MESSAGE" ]]; then
 
-      if [[ "$FILE_EXISTS" == "true" ]]; then
-        ACTION="Updated"
-      else
-        ACTION="Created"
-      fi
+        MSG="$COMMIT_MESSAGE"
 
-      if [[ "$file" == *.qmd ]]; then
-        MSG="${ACTION} ${NAME} (fw ${fw})"
       else
-        MSG="${ACTION} ${NAME}"
+
+        NAME=$(basename "$file")
+
+        if [[ "$FILE_EXISTS" == "true" ]]; then
+          ACTION="Updated"
+        else
+          ACTION="Created"
+        fi
+
+        if [[ "$file" == *.qmd ]]; then
+          MSG="${ACTION} ${NAME} (for fw ${fw})"
+        else
+          MSG="${ACTION} ${NAME}"
+        fi
+
       fi
 
       git commit -m "$MSG"
 
-      echo "✅ $MSG"
+      echo "$MSG"
 
     done
   done
 done
 
-# =========================
+# ============================
 # PUSH
-# =========================
+# ============================
 git push origin HEAD
-echo "✅ DONE"
+echo "DONE"
