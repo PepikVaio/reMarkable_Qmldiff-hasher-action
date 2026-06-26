@@ -22,7 +22,6 @@ TMP="/destrepo"
 # CONFIG
 # ============================
 FILTER_REGEX='^[0-9]+\.[0-9]'
-NORMALIZE_FW="${NORMALIZE_FW:-false}"
 IGNORE_HIDDEN="${IGNORE_HIDDEN:-false}"
 
 # ============================
@@ -51,9 +50,9 @@ for base_dir in "$SOURCE_ROOT"/*/; do
 
   for dir in "${fw_dirs[@]}"; do
 
-    fw_full=$(basename "$dir")
+    fw=$(basename "$dir")
 
-    [[ "$fw_full" =~ $FILTER_REGEX ]] || continue
+    [[ "$fw" =~ $FILTER_REGEX ]] || continue
 
     find "$dir" -type f \
       ! -path "*/.*/*" \
@@ -68,12 +67,6 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       destfile="$TMP/$rel_path"
 
       mkdir -p "$(dirname "$destfile")"
-
-      # FW handling
-      fw="$fw_full"
-      if [[ "$NORMALIZE_FW" == "true" ]]; then
-        fw=$(echo "$fw_full" | cut -d'.' -f1-2)
-      fi
 
       hashtab="$HASHTAB_ROOT/$fw/hashtab"
 
