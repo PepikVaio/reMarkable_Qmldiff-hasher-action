@@ -4,7 +4,13 @@ set -eo pipefail
 # ============================
 # INPUTS (GitHub Action)
 # ============================
-SOURCE_ROOT="/github/workspace/${INPUT_SOURCE_ROOT}"
+if [[ -z "$INPUT_SOURCE_ROOT" ]]; then
+  SOURCE_ROOT="/github/workspace"
+else
+  SOURCE_ROOT="/github/workspace/${INPUT_SOURCE_ROOT#/}"
+fi
+
+# SOURCE_ROOT="/github/workspace/${INPUT_SOURCE_ROOT}"
 HASHTAB_ROOT="/github/workspace/${INPUT_HASHTAB_ROOT}"
 DEST_REPO_NAME="${INPUT_DEST_REPO_NAME}"
 REPO_ACCESS_TOKEN="${INPUT_REPO_ACCESS_TOKEN}"
@@ -27,10 +33,6 @@ cd "$TMP"
 
 git config user.email "action@github.com"
 git config user.name "Hash Bot"
-
-echo "SOURCE_ROOT: $SOURCE_ROOT"
-echo "HASHTAB_ROOT: $HASHTAB_ROOT"
-echo "DEST: $DEST_REPO_NAME"
 
 # ============================
 # PROCESSING
@@ -75,12 +77,6 @@ for base_dir in "$SOURCE_ROOT"/*/; do
 
       hashtab="$HASHTAB_ROOT/$fw/hashtab"
 
-      echo "--------------------------------"
-      echo "FILE: $file"
-      echo "FW: $fw"
-      echo "DEST: $destfile"
-      echo "HASHTAB: $hashtab"
-
       # ============================
       # COPY FIRST
       # ============================
@@ -92,12 +88,12 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       if [[ "$file" == *.qmd ]]; then
 
         if [[ ! -f "$hashtab" ]]; then
-          echo "⚠️ Missing hashtab -> skipping"
+          echo "Missing hashtab -> skipping"
           continue
         fi
 
         qmldiff hash-diffs "$hashtab" "$destfile" || {
-          echo "❌ qmldiff failed"
+          echo "qmldiff failed"
           continue
         }
 
@@ -130,7 +126,7 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       fi
 
       git commit -m "$MSG"
-      echo "✅ $MSG"
+      echo "$MSG"
 
     done
   done
@@ -140,5 +136,4 @@ done
 # PUSH
 # ============================
 git push origin HEAD
-
 echo "DONE"
