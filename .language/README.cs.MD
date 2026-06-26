@@ -1,7 +1,7 @@
 [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/PepikVaio/reMarkable_Qmldiff-hasher-action)
 [![cs](https://img.shields.io/badge/lang-cs-springgreen.svg)](https://github.com/PepikVaio/reMarkable_Qmldiff-hasher-action/blob/main/.language/README.cs.md)
 
-# Github akce!
+# GitHub Akce - Hašování QMLDiff souborů!
 > Toto je jednoduchá akce GitHubu pro hashování souborů QMLDiff.
 > <br>
 > Tato Github akce automaticky zpracovává `.qmd` soubory, aplikuje na ně QML diff hashing pomocí hashtabů a následně je publikuje do veřejného GitHub repozitáře.
@@ -141,6 +141,53 @@ GitHub akce se automaticky spustí a provede:
 5. odeslání změn do veřejného repozitáře.
 
 <br>
+
+### Doporučená struktura repozitáře
+```text
+Private Repository
+│
+├── .github
+│   └── workflows
+│       └── hash-files.yml
+│
+├── .hashtabs
+│   ├── <firmware_version>
+│   │   └── hashtab
+│   └── <firmware_version>
+│       └── hashtab
+│
+├── <extension_name>
+│   ├── <firmware_version>
+│   │   ├── MainView.qmd
+│   │   ├── settings.json
+│   │   ├── resources.rcc
+│   │   ├── config.json
+│   │   ├── helper.js
+│   │   │
+│   │   ├── .hidden_file
+│   │   ├── .hidden_folder/
+│   │   │   └── secret.json
+│   │   │
+│   │   └── ...
+│   │
+│   ├── <firmware_version>
+│   │   ├── MainView.qmd
+│   │   ├── settings.json
+│   │   ├── resources.rcc
+│   │   │
+│   │   ├── .hidden_file
+│   │   ├── .hidden_folder/
+│   │   │   └── secret.json
+│   │   │
+│   │   └── ...
+│   │
+│   └── ...
+│
+├── <extension_name>
+│   └── ...
+│
+└── README.md
+```
 
 ## Pomoc
 Vytvořte problémy, pokud najdete problém.
