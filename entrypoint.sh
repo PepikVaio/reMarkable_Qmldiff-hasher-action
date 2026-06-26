@@ -126,10 +126,10 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       else
         NAME=$(basename "$file")
 
-        if [[ "$file" == *.qmd ]]; then
+        if [[ "$FILE_EXISTS" == "true" ]]; then
           MSG="Updated ${NAME} (fw ${fw})"
         else
-          MSG="Updated ${NAME}"
+          MSG="Created ${NAME} (fw ${fw})"
         fi
       fi
 
