@@ -31,8 +31,8 @@
 
 <br>
 
+### Vytvořte `Personal Access Token`:
 > [!NOTE]
-> Vytvořte `Personal Access Token`:
 > 1. Přihlaste se na `GitHub`.
 > 2. Klikněte na svůj profilový obrázek.
 > 3. Otevřete `Settings`.
