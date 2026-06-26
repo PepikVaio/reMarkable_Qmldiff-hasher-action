@@ -23,9 +23,9 @@
 
 > [!IMPORTANT]
 > Před použitím této Github akce budete potřebovat:
-> * privátní repozitář, který obsahuje vaše původní `.qmd` soubory a hashtaby,
-> * veřejný repozitář, do kterého se budou publikovat zpracované soubory,
-> * oprávnění zapisovat do veřejného repozitáře.
+> * Privátní repozitář, který obsahuje vaše původní `.qmd` soubory a hashtaby.
+> * Veřejný repozitář, do kterého se budou publikovat zpracované soubory.
+> * Oprávnění zapisovat do veřejného repozitáře.
 
 <br>
 
@@ -38,15 +38,15 @@
 > 5. Otevřete `Personal access tokens`.
 > 6. Vyberte `Fine-grained tokens`.
 > 7. Klikněte na `Generate new token`.
-> 8. Nastavte: `Repository access`.
-> 9. Vyberte: `Only select repositories`.
-> 10. Zvolte: Svůj veřejný repozitář.
-> 11. `Repository permissions` Nastavte oprávnění: * Contents → Read and write.
+> 8. Zapište název tokenu `qmldiff-hasher-action`.
+> 9. Nastavte `Repository access` - Vyberte `Only select repositories`.
+> 10. Zvolte svůj veřejný repozitář.
+> 11. Nastavte `Repository permissions` - Vyberte `+ Add permissions` a nastavte oprávnění `Contents → Read and write`.
 > 12. Klikněte na `Generate token` a zkopírujte si vygenerovaný token.
 
 <br>
 
-[!CAUTION]
+> [!CAUTION]
 > GitHub zobrazí token pouze jednou.
 > Po zavření stránky jej již nebude možné znovu zobrazit.
 
@@ -54,34 +54,36 @@
 
 > [!NOTE]
 > Uložte token do privátního repozitáře:
-> Otevřete svůj privátní repozitář a přejděte na:
-> - `Settings` / `Secrets and variables` / `Actions` / `New repository secret`
-> Vytvořte nový secret:
-> - Název: `PUBLIC_REPO_TOKEN` váš vygenerovaný GitHub token.
+> 1. Otevřete svůj privátní repozitář a přejděte na:
+>   - `Settings` / `Secrets and variables` / `Actions` / `New repository secret`
+> 2. Vytvořte nový secret:
+>   - Name: `PUBLIC_REPO_TOKEN` a vlote váš vygenerovaný GitHub token.
+> 3. Klikněte na `Add secret`.
 
 <br>
 
 > [!NOTE]
 > Přidejte workflow:
-> V privátním repozitáři vytvořte soubor:
-> - `.github/workflows/hash-files.yml`
-> Do něj vložte ukázkový workflow z tohoto repozitáře.
-> Upravte pouze následující proměnné:
-> - NAME_FOLDER:
-> - PATH_HASHTABS:
-> - NAME_PUBLIC_REPO:
-> - NAME_TOKEN:
-> - MESSAGE_COMMIT:
+> 1. V privátním repozitáři vytvořte soubor:
+>   - `.github/workflows/hash-files.yml`
+>   - Do něj vložte ukázkový workflow z tohoto repozitáře.
+> 2. Upravte pouze následující proměnné:
+>   - PATH_FOLDER:
+>   - PATH_HASHTABS:
+>   - NAME_PUBLIC_REPO:
+>   - NAME_TOKEN:
+>   - COMMIT_MESSAGE:
+>   - IGNORE_HIDDEN:
 
 <br>
 
 > [!TIP]
 > Význam proměnných:
-> `NAME_FOLDER`	Složka obsahující firmware. Pokud ji necháte prázdnou (""), bude se zpracovávat celý repozitář.
-> `PATH_HASHTABS`	Cesta ke složce s hashtaby.
-> `NAME_PUBLIC_REPO`	Název cílového veřejného repozitáře ve tvaru uživatel/repozitář.
-> `NAME_TOKEN`	Název `GitHub Secret` obsahující `Personal Access Token`.
-> `MESSAGE_COMMIT`	Volitelná vlastní zpráva. Pokud zůstane prázdná, vytvoří se automaticky.
+> - `NAME_FOLDER`	Složka obsahující firmware. Pokud ji necháte prázdnou (""), bude se zpracovávat celý repozitář.
+> - `PATH_HASHTABS`	Cesta ke složce s hashtaby.
+> - `NAME_PUBLIC_REPO`	Název cílového veřejného repozitáře ve tvaru uživatel/repozitář.
+> - `NAME_TOKEN`	Název `GitHub Secret` obsahující `Personal Access Token`.
+> - `MESSAGE_COMMIT`	Volitelná vlastní zpráva. Pokud zůstane prázdná, vytvoří se automaticky.
 
 <br>
 
