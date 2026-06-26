@@ -82,13 +82,13 @@ env:
   # CONFIG PRIVATE REPO (editable)
   # PATH_FOLDER = empty or name of folder
   # ======================================
-  PATH_FOLDER: Xovi_Extensions
-  PATH_HASHTABS: Xovi_Extensions/.hashtabs
+  PATH_FOLDER: ""
+  PATH_HASHTABS: .hashtabs
 
   # ======================================
   # CONFIG PUBLIC REPO (editable)
   # ======================================
-  NAME_PUBLIC_REPO: PepikVaio/reMarkable_Test
+  NAME_PUBLIC_REPO: user/repository
   NAME_TOKEN: PUBLIC_REPO_TOKEN
 
   # ======================================
@@ -144,13 +144,13 @@ The GitHub Action will start automatically and will:
 
 <br>
 
-### Doporučená struktura repozitáře
+### Recommended repository structure
 ```text
-Private Repository
+Private repository
 │
 ├── .github
 │   └── workflows
-│       └── hash-files.yml
+│       └── publish.yml
 │
 ├── .hashtabs
 │   ├── <firmware_version>
