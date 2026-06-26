@@ -119,12 +119,12 @@ jobs:
 ```
 
 > [!TIP]
-> `PATH_FOLDER` — folder containing `qmd` files. If left empty (""), the entire repository will be processed.
-> `PATH_HASHTABS` — path to the folder with hashtabs.
-> `NAME_PUBLIC_REPO` — name of the target public repository in the format `user/repository`.
-> `NAME_TOKEN` — name of the `GitHub Secret` containing the `Personal Access Token`.
-> `COMMIT_MESSAGE` — optional custom message. If left empty, one will be generated automatically.
-> `IGNORE_HIDDEN` — whether hidden files should also be processed.
+> - `PATH_FOLDER` — folder containing `qmd` files. If left empty (""), the entire repository will be processed.
+> - `PATH_HASHTABS` — path to the folder with hashtabs.
+> - `NAME_PUBLIC_REPO` — name of the target public repository in the format `user/repository`.
+> - `NAME_TOKEN` — name of the `GitHub Secret` containing the `Personal Access Token`.
+> - `COMMIT_MESSAGE` — optional custom message. If left empty, one will be generated automatically.
+> - `IGNORE_HIDDEN` — whether hidden files should also be processed.
 
 <br>
 
