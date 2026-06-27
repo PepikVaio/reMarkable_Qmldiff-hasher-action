@@ -83,6 +83,14 @@ for base_dir in "$SOURCE_ROOT"/*/; do
       # ============================
       cp "$file" "$destfile"
 
+
+      # ============================
+      # REPLACE TEXT (if available)
+      # ============================
+      if [[ -n "$REPLACE_FROM" && -n "$REPLACE_TO" ]]; then
+        sed -i "s|$REPLACE_FROM|$REPLACE_TO|g" "$destfile"
+      fi
+
       # ============================
       # QMD HASH
       # ============================
