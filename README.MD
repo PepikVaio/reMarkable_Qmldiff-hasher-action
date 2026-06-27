@@ -130,6 +130,10 @@ jobs:
 > `COMMIT_MESSAGE` optional custom message. If left empty, one will be generated automatically.
 > <br>
 > `IGNORE_HIDDEN` whether hidden files should also be processed.
+> <br>
+> `REPLACE_FROM` if you need to replace this text with `REPLACE_TO` text.
+> <br>
+> `REPLACE_TO` if you need `REPLACE_FROM` to replace the text with this text.
 
 <br>
 
