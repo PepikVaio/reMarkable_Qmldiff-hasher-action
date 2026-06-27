@@ -95,6 +95,8 @@ env:
   # ======================================
   COMMIT_MESSAGE: ""
   IGNORE_HIDDEN: true
+  REPLACE_FROM: ""
+  REPLACE_TO: ""
 
 jobs:
   main:
@@ -128,6 +130,10 @@ jobs:
 > `COMMIT_MESSAGE` volitelná vlastní zpráva. Pokud zůstane prázdná, vytvoří se automaticky.
 > <br>
 > `IGNORE_HIDDEN` volba zda se mají zpracovat i skryté soubory.
+> <br>
+> `REPLACE_FROM` pokud potřebujete tento text nahradit `REPLACE_TO` textem.
+> <br>
+> `REPLACE_TO` pokud potřebujete `REPLACE_FROM` text nahradit tímto textem.
 
 <br>
 
