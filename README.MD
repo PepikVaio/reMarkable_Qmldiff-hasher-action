@@ -97,6 +97,8 @@ env:
   # ======================================
   COMMIT_MESSAGE: ""
   IGNORE_HIDDEN: true
+  REPLACE_FROM: ""
+  REPLACE_TO: ""
 
 jobs:
   main:
