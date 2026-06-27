@@ -23,6 +23,8 @@ TMP="/destrepo"
 # ============================
 FILTER_REGEX='^[0-9]+\.[0-9]'
 IGNORE_HIDDEN="${IGNORE_HIDDEN:-false}"
+REPLACE_FROM="${REPLACE_FROM:-}"
+REPLACE_TO="${REPLACE_TO:-}"
 
 # ============================
 # CLONE DEST REPO
